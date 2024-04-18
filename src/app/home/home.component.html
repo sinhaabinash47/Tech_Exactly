@@ -1,3 +1,10 @@
-<app-toolbar></app-toolbar>
-<ag-grid-angular class="ag-theme-quartz" style="height: 500px;" [rowData]="youtubeList" [columnDefs]="colDefs">
-</ag-grid-angular>
+<div>
+    <app-toolbar [totalCount]="youtubeList.length" (toggleSelection)="toggleSelection()" [selectedCount]="selectedCount" [gridApi]="gridApi"
+    [gridOptions]="gridOptions" [colDefs]="colDefs"></app-toolbar>
+    <div style="margin-top: 2rem;">
+        <ag-grid-angular class="ag-theme-quartz" style="height: 500px;" [rowData]="youtubeList" [columnDefs]="colDefs"
+            (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" [gridOptions]="gridOptions"
+            (cellClicked)="onCellClicked($event)">
+        </ag-grid-angular>
+    </div>
+</div>

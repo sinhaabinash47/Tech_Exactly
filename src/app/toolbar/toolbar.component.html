@@ -1,5 +1,17 @@
 <div class="toolbar">
-    <!-- <button (click)="toggleCollectionMode()">Toggle Collection Mode</button> -->
-    <!-- <span>Total Count: {{ totalCount }}</span> -->
-    <!-- <span>Selected Count: {{ selectedCount }}</span> -->
-  </div>
+    <button (click)="toggleSelectionMode()" style="background-color: #1f9324; 
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;">{{toggleButtonText}}</button>
+    <div>
+        <span style="margin-right: 1rem;">Total Count: {{ totalCount }}</span>
+        <span>Selected Count: {{ selectedCount }}</span>
+    </div>
+</div>
