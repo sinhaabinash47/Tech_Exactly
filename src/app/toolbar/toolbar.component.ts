@@ -13,7 +13,6 @@ export class ToolbarComponent {
   @Input() totalCount!: number;
   @Input() selectedCount!: number;
   @Input() gridApi?: GridApi;
-  @Input() gridOptions!: GridOptions;
   @Output() toggleSelection = new EventEmitter<string>();
   @Input() colDefs!: ColDef[];
 

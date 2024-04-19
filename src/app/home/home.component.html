@@ -1,7 +1,6 @@
 <div>
     <app-toolbar [totalCount]="youtubeList.length" (toggleSelection)="toggleSelection()"
-        [selectedCount]="selectedCount" [gridApi]="gridApi" [gridOptions]="gridOptions"
-        [colDefs]="colDefs"></app-toolbar>
+        [selectedCount]="selectedCount" [gridApi]="gridApi" [colDefs]="colDefs"></app-toolbar>
     <div style="margin-top: 2rem;">
         <ag-grid-angular class="ag-theme-quartz" style="height: 500px;" [rowData]="youtubeList" [columnDefs]="colDefs"
             (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged()" [gridOptions]="gridOptions"
