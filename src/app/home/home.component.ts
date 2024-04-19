@@ -11,14 +11,13 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private YoutubeserviceService: YoutubeserviceService, private sanitizer: DomSanitizer) {
-
-  }
+  constructor(private YoutubeserviceService: YoutubeserviceService, private sanitizer: DomSanitizer) { }
 
   youtubeList: any[] = [];
   selectedCount: number = 0;
   gridApi: GridApi | undefined;
   gridOptions: GridOptions = { rowSelection: 'multiple' };
+  visibility: boolean = true;
 
 
 
@@ -26,12 +25,13 @@ export class HomeComponent implements OnInit {
     this.getYoutubeData();
   }
   public colDefs: ColDef[] = [
-    { headerName: '', field: 'checkbox', headerCheckboxSelection: true, checkboxSelection: true, cellRenderer: 'checkboxRenderer', hide: false, width: 50 },
+    { headerName: '', field: 'checkbox', headerCheckboxSelection: true, checkboxSelection: true, cellRenderer: 'checkboxRenderer', width: 50 },
     { headerName: 'Thumbainls', field: 'thumbnails', cellRenderer: (ui: any) => this.thumbnailRenderer(ui) },
     { headerName: 'Published On', field: 'publishedAt' },
-    { headerName: 'Video Title', field: 'title', cellRenderer: (_video: any) => this.videoTitleRenderer(_video), width: 300 },
-    { headerName: 'Description', field: 'description', cellRenderer: (_description: any) => this.descriptionRenderer(_description), width: 500 },
+    { headerName: 'Video Title', field: 'title', cellRenderer: (_video: any) => this.videoTitleRenderer(_video), maxWidth: 500, minWidth: 500 },
+    { headerName: 'Description', field: 'description', cellRenderer: (_description: any) => this.descriptionRenderer(_description), maxWidth: 500, minWidth: 500 },
   ];
+
   getYoutubeData() {
     this.YoutubeserviceService.fetchYoutubeData().subscribe((_data: any[]) => {
       this.youtubeList = _data.map(_item => ({
@@ -39,17 +39,14 @@ export class HomeComponent implements OnInit {
       }));
     }, error => {
       console.error('Error fetching YouTube data:', error);
-    }); this.youtubeList
+    });
   };
 
   descriptionRenderer(params: any) {
     const _desc = params.data.description;
     const _truncateDesc = _desc.length > 50 ? _desc.substring(0, 60) + '...' : _desc;
     const element = document.createElement('div');
-    element.innerHTML = `<div title="${_desc}">${_truncateDesc}</div>`;
-    element.addEventListener('click', () => {
-      alert(_desc);
-    });
+    element.innerHTML = `<div title="${_desc}" style="cursor: pointer;">${_truncateDesc}</div>`;
     return element;
   }
 
@@ -60,11 +57,6 @@ export class HomeComponent implements OnInit {
     return thumbnailsimg
   }
 
-  toggleSelection() {
-    this.colDefs[0].hide = !this.colDefs[0].hide;
-    this.gridApi?.refreshHeader();
-  }
-
   videoTitleRenderer(item: any): SafeHtml {
     const { data } = item;
     const videoId = data.videoId;
@@ -73,9 +65,14 @@ export class HomeComponent implements OnInit {
     return videoLink
   }
 
+  toggleSelection() {
+    this.visibility = !this.visibility;
+    this.gridApi?.setColumnsVisible(['checkbox'], this.visibility);
+  }
+
   onGridReady(params: any) {
     this.gridApi = params.api;
-    this.gridOptions = params.api.alignedGridsService.gridOptionsService.gridOptions;
+    this.gridOptions = params.api;
   }
 
   onSelectionChanged() {
