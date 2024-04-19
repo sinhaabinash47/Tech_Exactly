@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   }
   public colDefs: ColDef[] = [
     { headerName: '', field: 'checkbox', headerCheckboxSelection: true, checkboxSelection: true, cellRenderer: 'checkboxRenderer', width: 50 },
-    { headerName: 'Thumbainls', field: 'thumbnails', cellRenderer: (params: ICellRendererParams) => this.thumbnailRenderer(params) },
+    { headerName: '', field: 'thumbnails', cellRenderer: (params: ICellRendererParams) => this.thumbnailRenderer(params) },
     { headerName: 'Published On', field: 'publishedAt' },
     { headerName: 'Video Title', field: 'title', cellRenderer: (params: ICellRendererParams) => this.videoTitleRenderer(params), maxWidth: 500, minWidth: 500 },
     { headerName: 'Description', field: 'description', cellRenderer: (params: ICellRendererParams) => this.descriptionRenderer(params), maxWidth: 500, minWidth: 500 },
