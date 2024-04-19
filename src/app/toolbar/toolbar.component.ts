@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GridApi, ColDef } from 'ag-grid-community';
+import { GridApi, ColDef, GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'app-toolbar',
@@ -13,6 +13,7 @@ export class ToolbarComponent {
   @Input() totalCount!: number;
   @Input() selectedCount!: number;
   @Input() gridApi?: GridApi;
+  @Input() gridOptions!: GridOptions;
   @Output() toggleSelection = new EventEmitter<string>();
   @Input() colDefs!: ColDef[];
 
