@@ -1,8 +1,14 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColDef, GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
+import { CellClickedEvent, ColDef, Column, GridApi, GridOptions, GridReadyEvent, ICellRendererParams } from 'ag-grid-community';
 import { YoutubeserviceService } from '../youtubeservice.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-// import { CellRendererComponent } from '../cell-renderer/cell-renderer.component';
+
+interface YouTubeVideo {
+  data: {
+    videoId: string;
+    title: string;
+  };
+}
 
 @Component({
   selector: 'app-home',
@@ -19,30 +25,28 @@ export class HomeComponent implements OnInit {
   gridOptions: GridOptions = { rowSelection: 'multiple' };
   visibility: boolean = true;
 
-
-
   ngOnInit(): void {
     this.getYoutubeData();
   }
   public colDefs: ColDef[] = [
     { headerName: '', field: 'checkbox', headerCheckboxSelection: true, checkboxSelection: true, cellRenderer: 'checkboxRenderer', width: 50 },
-    { headerName: 'Thumbainls', field: 'thumbnails', cellRenderer: (ui: any) => this.thumbnailRenderer(ui) },
+    { headerName: 'Thumbainls', field: 'thumbnails', cellRenderer: (params: ICellRendererParams) => this.thumbnailRenderer(params) },
     { headerName: 'Published On', field: 'publishedAt' },
-    { headerName: 'Video Title', field: 'title', cellRenderer: (_video: any) => this.videoTitleRenderer(_video), maxWidth: 500, minWidth: 500 },
-    { headerName: 'Description', field: 'description', cellRenderer: (_description: any) => this.descriptionRenderer(_description), maxWidth: 500, minWidth: 500 },
+    { headerName: 'Video Title', field: 'title', cellRenderer: (params: ICellRendererParams) => this.videoTitleRenderer(params), maxWidth: 500, minWidth: 500 },
+    { headerName: 'Description', field: 'description', cellRenderer: (params: ICellRendererParams) => this.descriptionRenderer(params), maxWidth: 500, minWidth: 500 },
   ];
 
   getYoutubeData() {
-    this.YoutubeserviceService.fetchYoutubeData().subscribe((_data: any[]) => {
+    this.YoutubeserviceService.fetchYoutubeData().subscribe((_data: YouTubeVideo[]) => {
       this.youtubeList = _data.map(_item => ({
         ..._item,
       }));
     }, error => {
       console.error('Error fetching YouTube data:', error);
-    });
-  };
+    })
+  }
 
-  descriptionRenderer(params: any) {
+  descriptionRenderer(params: ICellRendererParams) {
     const _desc = params.data.description;
     const _truncateDesc = _desc.length > 50 ? _desc.substring(0, 60) + '...' : _desc;
     const element = document.createElement('div');
@@ -57,7 +61,7 @@ export class HomeComponent implements OnInit {
     return thumbnailsimg
   }
 
-  videoTitleRenderer(item: any): SafeHtml {
+  videoTitleRenderer(item: YouTubeVideo): SafeHtml {
     const { data } = item;
     const videoId = data.videoId;
     const safeLink = `https://www.youtube.com/watch?v=${videoId}`;
@@ -70,19 +74,20 @@ export class HomeComponent implements OnInit {
     this.gridApi?.setColumnsVisible(['checkbox'], this.visibility);
   }
 
-  onGridReady(params: any) {
+  onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-    this.gridOptions = params.api;
+    // this.gridOptions = params.api;
   }
 
   onSelectionChanged() {
     if (this.gridApi) {
       this.selectedCount = this.gridApi?.getSelectedRows().length || 0;
     }
-  };
+  }
 
-  onCellClicked(event: any) {
-    if (event.column.colId !== 'checkbox') {
+  onCellClicked(event: CellClickedEvent) {
+    const column: Column = event.column;
+    if (column.getColId() !== 'checkbox') {
       const node = event.node;
       if (node.isSelected()) {
         node.setSelected(false);
@@ -90,5 +95,5 @@ export class HomeComponent implements OnInit {
         node.setSelected(true);
       }
     }
-  };
+  }
 }

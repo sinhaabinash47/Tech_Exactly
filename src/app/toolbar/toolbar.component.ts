@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GridApi, ColDef, GridOptions } from 'ag-grid-community';
+import { GridApi, ColDef } from 'ag-grid-community';
 
 @Component({
   selector: 'app-toolbar',
